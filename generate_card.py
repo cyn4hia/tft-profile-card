@@ -190,13 +190,67 @@ def generate_placement_sparkline(placements: list[int], x_start: int, y_center: 
         y = y_center - height / 2 + (p - 1) * scale_y
         points.append(f"{x:.1f},{y:.1f}")
 
-        # Color dot based on placement
         color = "#4ade80" if p <= 4 else "#f87171"
         dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.5" fill="{color}" opacity="0.9"/>')
 
     polyline = f'<polyline points="{" ".join(points)}" fill="none" stroke="#555" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>'
 
     return polyline + "\n".join(dots)
+
+
+RANK_COLORS = {
+    "IRON": "#8b9bb0",
+    "BRONZE": "#c49a6c",
+    "SILVER": "#b8c4d4",
+    "GOLD": "#f0c75e",
+    "PLATINUM": "#6ecfc0",
+    "EMERALD": "#50c878",
+    "DIAMOND": "#91a8ff",
+    "MASTER": "#c488f0",
+    "GRANDMASTER": "#ff7b7b",
+    "CHALLENGER": "#ffd770",
+}
+
+
+def get_rank_color(tier: str) -> str:
+    return RANK_COLORS.get(tier.upper(), "#91a8ff")
+
+
+def escape_xml(text: str) -> str:
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+def generate_placement_sparkline(placements: list[int], x_start: int, y_center: int, width: int, height: int) -> str:
+    """Generate a cute sparkline with rounded dots."""
+    if not placements:
+        return ""
+
+    n = len(placements)
+    step_x = width / max(n - 1, 1)
+    scale_y = height / 7
+
+    points = []
+    dots = []
+    for i, p in enumerate(placements):
+        x = x_start + i * step_x
+        y = y_center - height / 2 + (p - 1) * scale_y
+        points.append(f"{x:.1f},{y:.1f}")
+
+        color = "#7ec8e3" if p <= 4 else "#ffb3ba"
+        dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3" fill="{color}" stroke="white" stroke-width="1" opacity="0.95"/>')
+
+    polyline = f'<polyline points="{" ".join(points)}" fill="none" stroke="#b8d4f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>'
+
+    return polyline + "\n".join(dots)
+
+
+def generate_star(cx: float, cy: float, size: float, opacity: float = 0.3) -> str:
+    """Generate a tiny decorative star/sparkle."""
+    h = size / 2
+    return f'''<g opacity="{opacity}" transform="translate({cx},{cy})">
+      <line x1="-{h}" y1="0" x2="{h}" y2="0" stroke="#a8d8ff" stroke-width="1" stroke-linecap="round"/>
+      <line x1="0" y1="-{h}" x2="0" y2="{h}" stroke="#a8d8ff" stroke-width="1" stroke-linecap="round"/>
+    </g>'''
 
 
 def generate_svg(
@@ -210,7 +264,7 @@ def generate_svg(
     icon_data_uri: str,
     past_ranks: list[dict],
 ) -> str:
-    """Generate the complete SVG stats card."""
+    """Generate a cute blue-themed SVG stats card."""
 
     display_name = escape_xml(riot_id)
     rank_color = get_rank_color(tier)
@@ -220,96 +274,138 @@ def generate_svg(
 
     icon_href = icon_data_uri if icon_data_uri else get_placeholder_icon_data_uri()
 
-    card_w = 420
-    card_h = 320
+    card_w = 440
+    card_h = 340
     if past_ranks:
         card_h += 50
 
+    import random
+    random.seed(42) 
+    stars_svg = ""
+    for _ in range(8):
+        sx = random.randint(20, card_w - 20)
+        sy = random.randint(10, card_h - 10)
+        ss = random.uniform(4, 8)
+        so = random.uniform(0.08, 0.2)
+        stars_svg += generate_star(sx, sy, ss, so)
+
     past_ranks_svg = ""
     if past_ranks:
-        y_pr = card_h - 62
-        past_ranks_svg += f'<text x="24" y="{y_pr}" fill="#888" font-size="10" font-family="\'Segoe UI\', sans-serif" font-weight="600" letter-spacing="0.5">PAST SEASONS</text>'
-        x_offset = 24
-        for pr in past_ranks[:6]:  # max 6
+        y_pr = card_h - 65
+        past_ranks_svg += f'<text x="28" y="{y_pr}" fill="#7a9cc6" font-size="10" font-family="\'Nunito\', \'Segoe UI\', sans-serif" font-weight="700" letter-spacing="1">✧ PAST SEASONS</text>'
+        x_offset = 28
+        for pr in past_ranks[:6]:
             label = f"{escape_xml(pr['season'])}: {escape_xml(pr['rank'])}"
-            pill_w = len(label) * 6.2 + 16
+            pill_w = len(label) * 6 + 20
             past_ranks_svg += f'''
-            <rect x="{x_offset}" y="{y_pr + 6}" width="{pill_w:.0f}" height="20" rx="4" fill="#2a2a2a"/>
-            <text x="{x_offset + pill_w / 2:.0f}" y="{y_pr + 19}" fill="#aaa" font-size="9.5" font-family="'Segoe UI', sans-serif" text-anchor="middle">{label}</text>
+            <rect x="{x_offset}" y="{y_pr + 8}" width="{pill_w:.0f}" height="22" rx="11" fill="#1e3a5f" stroke="#2a5080" stroke-width="0.5"/>
+            <text x="{x_offset + pill_w / 2:.0f}" y="{y_pr + 22}" fill="#8bbce0" font-size="9" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle">{label}</text>
             '''
-            x_offset += pill_w + 6
+            x_offset += pill_w + 8
 
     sparkline_svg = generate_placement_sparkline(
-        match_stats["placements"][-15:], x_start=240, y_center=152, width=150, height=40
+        match_stats["placements"][-15:], x_start=248, y_center=162, width=160, height=40
     )
+
+    def stat_bubble(cx, cy, label, value, sub, color="#7ec8e3"):
+        return f'''
+        <circle cx="{cx}" cy="{cy}" r="38" fill="#0d2137" stroke="{color}" stroke-width="1.5" opacity="0.6"/>
+        <text x="{cx}" y="{cy - 5}" fill="{color}" font-size="18" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="800" text-anchor="middle">{value}</text>
+        <text x="{cx}" y="{cy + 10}" fill="#5a8ab5" font-size="8" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle" letter-spacing="0.5">{label}</text>
+        <text x="{cx}" y="{cy + 22}" fill="#3d6d94" font-size="7.5" font-family="'Nunito', 'Segoe UI', sans-serif" text-anchor="middle">{sub}</text>
+        '''
+
+    stats_svg = stat_bubble(60, 165, "WIN RATE", f"{ranked_wr:.0f}%", f"{wins}W {losses}L", "#7ec8e3")
+    stats_svg += stat_bubble(150, 165, "TOP 4", f"{match_stats['top4_rate']:.0f}%", f"{match_stats['top4']}/{match_stats['games_analyzed']}", "#98d4ee")
+    stats_svg += stat_bubble(60, 260, "AVG PLACE", f"{match_stats['avg_placement']:.1f}", f"last {match_stats['games_analyzed']}", "#b0c4de")
+
+    placement_bar = generate_placement_bar(match_stats["placements"], 145, 238, 260, 16)
 
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
      width="{card_w}" height="{card_h}" viewBox="0 0 {card_w} {card_h}" fill="none">
 
   <defs>
     <clipPath id="avatar-clip">
-      <circle cx="52" cy="56" r="26"/>
+      <circle cx="52" cy="54" r="28"/>
     </clipPath>
-    <linearGradient id="rank-glow" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="{rank_color}" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="{rank_color}" stop-opacity="0"/>
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1628"/>
+      <stop offset="50%" stop-color="#0f2035"/>
+      <stop offset="100%" stop-color="#0a1a30"/>
     </linearGradient>
-    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
-      <feDropShadow dx="0" dy="1" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+    <linearGradient id="border-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e4a7a" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#2a6aaa" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#1e4a7a" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="top-bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4a9eff" stop-opacity="0"/>
+      <stop offset="30%" stop-color="{rank_color}"/>
+      <stop offset="70%" stop-color="#7ec8e3"/>
+      <stop offset="100%" stop-color="#4a9eff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.3" cy="0.2" r="0.7">
+      <stop offset="0%" stop-color="#1a4a80" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0a1628" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
 
   <!-- Card Background -->
-  <rect width="{card_w}" height="{card_h}" rx="12" fill="#161616" stroke="#2a2a2a" stroke-width="1"/>
-  <rect width="{card_w}" height="{card_h}" rx="12" fill="url(#rank-glow)"/>
+  <rect width="{card_w}" height="{card_h}" rx="16" fill="url(#bg-grad)"/>
+  <rect width="{card_w}" height="{card_h}" rx="16" fill="url(#glow)"/>
+  <rect width="{card_w}" height="{card_h}" rx="16" fill="none" stroke="url(#border-grad)" stroke-width="1.5"/>
 
-  <!-- Top accent line -->
-  <rect x="0" y="0" width="{card_w}" height="3" rx="1.5" fill="{rank_color}" opacity="0.6"/>
+  <!-- Top accent bar -->
+  <rect x="40" y="0" width="{card_w - 80}" height="2.5" rx="1.25" fill="url(#top-bar)" opacity="0.8"/>
 
-  <!-- Avatar -->
-  <circle cx="52" cy="56" r="27" fill="none" stroke="{rank_color}" stroke-width="2" opacity="0.7"/>
-  <image href="{icon_href}" x="26" y="30" width="52" height="52" clip-path="url(#avatar-clip)" preserveAspectRatio="xMidYMid slice"/>
+  <!-- Decorative sparkles -->
+  {stars_svg}
+
+  <!-- Avatar with glow ring -->
+  <circle cx="52" cy="54" r="31" fill="none" stroke="{rank_color}" stroke-width="2" opacity="0.25" filter="url(#soft-glow)"/>
+  <circle cx="52" cy="54" r="29.5" fill="none" stroke="{rank_color}" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="52" cy="54" r="28" fill="#0d2137"/>
+  <image href="{icon_href}" x="24" y="26" width="56" height="56" clip-path="url(#avatar-clip)" preserveAspectRatio="xMidYMid slice"/>
 
   <!-- Riot ID -->
-  <text x="90" y="48" fill="#eee" font-size="16" font-family="'Segoe UI', sans-serif" font-weight="700">{display_name}</text>
+  <text x="94" y="44" fill="#d4e6f7" font-size="17" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="800">{display_name}</text>
 
-  <!-- Rank badge -->
-  <rect x="90" y="56" width="{len(tier_display) * 7.5 + 20:.0f}" height="22" rx="4" fill="{rank_color}" opacity="0.15"/>
-  <text x="100" y="72" fill="{rank_color}" font-size="12" font-family="'Segoe UI', sans-serif" font-weight="600">{escape_xml(tier_display)}</text>
-  <text x="{100 + len(tier_display) * 7.5:.0f}" y="72" fill="#888" font-size="11" font-family="'Segoe UI', sans-serif">{lp} LP</text>
+  <!-- Rank badge pill -->
+  <rect x="94" y="52" width="{len(tier_display) * 7.2 + 35:.0f}" height="24" rx="12" fill="{rank_color}" opacity="0.12" stroke="{rank_color}" stroke-width="0.5" stroke-opacity="0.3"/>
+  <text x="106" y="69" fill="{rank_color}" font-size="12" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700">✦ {escape_xml(tier_display)}</text>
+  <text x="{111 + len(tier_display) * 7.2:.0f}" y="69" fill="#5a8ab5" font-size="11" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="600">{lp} LP</text>
 
-  <!-- Divider -->
-  <line x1="24" y1="98" x2="{card_w - 24}" y2="98" stroke="#2a2a2a" stroke-width="1"/>
+  <!-- Cute divider with dots -->
+  <line x1="28" y1="96" x2="{card_w - 28}" y2="96" stroke="#1a3a5a" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+  <circle cx="{card_w / 2}" cy="96" r="2" fill="#2a6aaa" opacity="0.6"/>
 
-  <!-- Stats Grid -->
-  <!-- Win Rate (ranked) -->
-  <text x="24" y="120" fill="#888" font-size="10" font-family="'Segoe UI', sans-serif" font-weight="600" letter-spacing="0.5">RANKED W/L</text>
-  <text x="24" y="140" fill="#eee" font-size="18" font-family="'Segoe UI', sans-serif" font-weight="700">{ranked_wr:.1f}%</text>
-  <text x="24" y="155" fill="#666" font-size="10" font-family="'Segoe UI', sans-serif">{wins}W {losses}L</text>
+  <!-- TFT label -->
+  <text x="{card_w - 28}" y="50" fill="#2a5a8a" font-size="9" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700" text-anchor="end" letter-spacing="1.5">TEAMFIGHT TACTICS</text>
 
-  <!-- Top 4 Rate -->
-  <text x="130" y="120" fill="#888" font-size="10" font-family="'Segoe UI', sans-serif" font-weight="600" letter-spacing="0.5">TOP 4 RATE</text>
-  <text x="130" y="140" fill="#eee" font-size="18" font-family="'Segoe UI', sans-serif" font-weight="700">{match_stats['top4_rate']:.1f}%</text>
-  <text x="130" y="155" fill="#666" font-size="10" font-family="'Segoe UI', sans-serif">{match_stats['top4']}/{match_stats['games_analyzed']} games</text>
+  <!-- Stat bubbles -->
+  {stats_svg}
 
-  <!-- Avg Placement -->
-  <text x="240" y="120" fill="#888" font-size="10" font-family="'Segoe UI', sans-serif" font-weight="600" letter-spacing="0.5">RECENT TREND</text>
+  <!-- Recent trend section -->
+  <text x="248" y="120" fill="#5a8ab5" font-size="9" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ RECENT GAMES</text>
 
   <!-- Sparkline -->
   {sparkline_svg}
 
-  <!-- Recent match stats summary -->
-  <text x="24" y="185" fill="#888" font-size="10" font-family="'Segoe UI', sans-serif" font-weight="600" letter-spacing="0.5">AVG PLACEMENT</text>
-  <text x="24" y="208" fill="#eee" font-size="22" font-family="'Segoe UI', sans-serif" font-weight="700">{match_stats['avg_placement']:.1f}</text>
-  <text x="70" y="208" fill="#666" font-size="10" font-family="'Segoe UI', sans-serif">last {match_stats['games_analyzed']} games</text>
+  <!-- Sparkline labels -->
+  <text x="248" y="190" fill="#3d6d94" font-size="7.5" font-family="'Nunito', 'Segoe UI', sans-serif">1st</text>
+  <text x="248" y="140" fill="#3d6d94" font-size="7.5" font-family="'Nunito', 'Segoe UI', sans-serif">8th</text>
 
-  <!-- Placement distribution bar -->
-  <text x="24" y="235" fill="#888" font-size="10" font-family="'Segoe UI', sans-serif" font-weight="600" letter-spacing="0.5">PLACEMENT SPREAD</text>
-  {generate_placement_bar(match_stats["placements"], 24, 244, card_w - 48, 14)}
+  <!-- Placement spread -->
+  <text x="145" y="230" fill="#5a8ab5" font-size="9" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ PLACEMENTS</text>
+  {placement_bar}
 
   <!-- Footer -->
-  <text x="{card_w - 24}" y="{card_h - 14}" fill="#444" font-size="9" font-family="'Segoe UI', sans-serif" text-anchor="end">Updated {datetime.now(timezone.utc).strftime('%b %d, %Y %H:%M UTC')}</text>
-  <text x="24" y="{card_h - 14}" fill="#444" font-size="9" font-family="'Segoe UI', sans-serif">Teamfight Tactics</text>
+  <text x="{card_w - 28}" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Nunito', 'Segoe UI', sans-serif" text-anchor="end">✦ Updated {datetime.now(timezone.utc).strftime('%b %d, %Y %H:%M UTC')}</text>
+  <text x="28" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Nunito', 'Segoe UI', sans-serif">♡ glhf</text>
 
   {past_ranks_svg}
 
@@ -319,7 +415,7 @@ def generate_svg(
 
 
 def generate_placement_bar(placements: list[int], x: int, y: int, width: int, height: int) -> str:
-    """Generate a horizontal stacked bar showing placement distribution."""
+    """Generate a cute rounded placement distribution bar."""
     if not placements:
         return ""
 
@@ -329,19 +425,30 @@ def generate_placement_bar(placements: list[int], x: int, y: int, width: int, he
             counts[p - 1] += 1
 
     total = len(placements)
-    colors = ["#4ade80", "#86efac", "#bef264", "#fde047", "#fbbf24", "#fb923c", "#f87171", "#ef4444"]
+
+    colors = ["#5bcefa", "#7ed4f0", "#98dce8", "#b0e0e0", "#d4b8d4", "#e8a8b8", "#f0909a", "#f07080"]
     labels = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th"]
 
     svg = ""
     x_offset = x
+    first = True
+    last_i = max(i for i in range(8) if counts[i] > 0)
     for i in range(8):
         if counts[i] == 0:
             continue
         w = (counts[i] / total) * width
-        svg += f'<rect x="{x_offset:.1f}" y="{y}" width="{w:.1f}" height="{height}" rx="2" fill="{colors[i]}" opacity="0.7"/>'
-        if w > 20:
-            svg += f'<text x="{x_offset + w / 2:.1f}" y="{y + height / 2 + 3.5}" fill="#000" font-size="8" font-family="\'Segoe UI\', sans-serif" font-weight="600" text-anchor="middle" opacity="0.8">{labels[i]}</text>'
+        rx = "8" if first and i == last_i else ("8 0 0 8" if first else ("0 8 8 0" if i == last_i else "0"))
+        if first and i == last_i:
+            svg += f'<rect x="{x_offset:.1f}" y="{y}" width="{w:.1f}" height="{height}" rx="8" fill="{colors[i]}" opacity="0.75"/>'
+        else:
+            svg += f'<rect x="{x_offset:.1f}" y="{y}" width="{w:.1f}" height="{height}" fill="{colors[i]}" opacity="0.75"/>'
+        if w > 22:
+            svg += f'<text x="{x_offset + w / 2:.1f}" y="{y + height / 2 + 3}" fill="#0a1628" font-size="7.5" font-family="\'Nunito\', \'Segoe UI\', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">{labels[i]}</text>'
+        if first:
+            first = False
         x_offset += w
+
+    svg = f'<clipPath id="bar-clip"><rect x="{x}" y="{y}" width="{width}" height="{height}" rx="8"/></clipPath><g clip-path="url(#bar-clip)">{svg}</g>'
 
     return svg
 
@@ -370,7 +477,6 @@ def generate_mock_card() -> str:
             {"season": "Set 9", "rank": "Diamond I"},
         ],
     )
-
 
 def main():
 
@@ -436,7 +542,12 @@ def main():
     match_stats = process_matches(puuid, match_ids)
     print(f"  Avg placement: {match_stats['avg_placement']:.2f}, Top 4: {match_stats['top4_rate']:.1f}%")
 
-    past_ranks = parse_past_ranks(PAST_RANKS)
+    past_ranks = [
+        {"season": "Set 15", "rank": "Diamond IV"},
+        {"season": "Set 14", "rank": "Diamond IV"},
+        {"season": "Set 13", "rank": "Emerald IV"},
+
+    ]
 
     svg = generate_svg(
         riot_id=riot_id_display,
