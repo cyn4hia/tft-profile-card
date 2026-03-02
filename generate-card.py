@@ -13,13 +13,17 @@ import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
 
-REGION = os.environ.get("REGION", "na1")  
-ROUTING = os.environ.get("ROUTING", "americas") 
-PROFILE_IMAGE_URL = os.environ.get("PROFILE_IMAGE_URL", "") 
-MATCH_COUNT = int(os.environ.get("MATCH_COUNT", "20"))  
-PAST_RANKS = os.environ.get("PAST_RANKS", "") 
-OUTPUT_PATH = os.environ.get("OUTPUT_PATH", "tft-stats.svg")
 
+RIOT_API_KEY = os.environ.get("RIOT_API_KEY", "")
+RIOT_GAME_NAME = os.environ.get("RIOT_GAME_NAME", "")
+RIOT_TAG_LINE = os.environ.get("RIOT_TAG_LINE", "")
+RIOT_ID = os.environ.get("RIOT_ID", "")  
+REGION = os.environ.get("REGION", "na1")  
+ROUTING = os.environ.get("ROUTING", "americas")  
+PROFILE_IMAGE_URL = os.environ.get("PROFILE_IMAGE_URL", "")  
+MATCH_COUNT = int(os.environ.get("MATCH_COUNT", "20"))  
+PAST_RANKS = os.environ.get("PAST_RANKS", "")  
+OUTPUT_PATH = os.environ.get("OUTPUT_PATH", "tft-stats.svg")
 
 def api_request(url: str) -> dict:
     """Make authenticated request to Riot API."""
@@ -153,7 +157,6 @@ def parse_past_ranks(raw: str) -> list[dict]:
             ranks.append({"season": season.strip(), "rank": rank.strip()})
     return ranks
 
-
 RANK_COLORS = {
     "IRON": "#6b6b6b",
     "BRONZE": "#a0522d",
@@ -192,6 +195,7 @@ def generate_placement_sparkline(placements: list[int], x_start: int, y_center: 
         y = y_center - height / 2 + (p - 1) * scale_y
         points.append(f"{x:.1f},{y:.1f}")
 
+        # Color dot based on placement
         color = "#4ade80" if p <= 4 else "#f87171"
         dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.5" fill="{color}" opacity="0.9"/>')
 
@@ -231,7 +235,7 @@ def generate_svg(
         y_pr = card_h - 62
         past_ranks_svg += f'<text x="24" y="{y_pr}" fill="#888" font-size="10" font-family="\'Segoe UI\', sans-serif" font-weight="600" letter-spacing="0.5">PAST SEASONS</text>'
         x_offset = 24
-        for pr in past_ranks[:6]: 
+        for pr in past_ranks[:6]:  # max 6
             label = f"{escape_xml(pr['season'])}: {escape_xml(pr['rank'])}"
             pill_w = len(label) * 6.2 + 16
             past_ranks_svg += f'''
@@ -346,7 +350,6 @@ def generate_placement_bar(placements: list[int], x: int, y: int, width: int, he
 
     return svg
 
-
 def generate_mock_card() -> str:
     """Generate a card with placeholder data for preview/testing."""
     mock_match_stats = {
@@ -373,21 +376,29 @@ def generate_mock_card() -> str:
         ],
     )
 
+
 def main():
-    if not RIOT_API_KEY or not RIOT_ID:
-        print("⚠  No RIOT_API_KEY or RIOT_ID set. Generating preview card with mock data.")
+
+    if not RIOT_API_KEY:
+        print("⚠  No RIOT_API_KEY set. Generating preview card with mock data.")
         svg = generate_mock_card()
         with open(OUTPUT_PATH, "w") as f:
             f.write(svg)
         print(f"✓  Preview card saved to {OUTPUT_PATH}")
         return
 
-    if "#" not in RIOT_ID:
-        print("Error: RIOT_ID must be in format 'GameName#TAG'", file=sys.stderr)
+    # Resolve Riot ID from either split env vars or combined RIOT_ID
+    if RIOT_GAME_NAME and RIOT_TAG_LINE:
+        game_name = RIOT_GAME_NAME
+        tag_line = RIOT_TAG_LINE
+    elif RIOT_ID and "#" in RIOT_ID:
+        game_name, tag_line = RIOT_ID.rsplit("#", 1)
+    else:
+        print("Error: Set RIOT_GAME_NAME + RIOT_TAG_LINE, or RIOT_ID as 'Name#TAG'", file=sys.stderr)
         sys.exit(1)
 
-    game_name, tag_line = RIOT_ID.rsplit("#", 1)
-    print(f"Fetching stats for {game_name}#{tag_line} on {REGION}...")
+    riot_id_display = f"{game_name}#{tag_line}"
+    print(f"Fetching stats for {riot_id_display} on {REGION}...")
 
     puuid = get_puuid(game_name, tag_line)
     print(f"  PUUID: {puuid[:12]}...")
@@ -420,7 +431,7 @@ def main():
     past_ranks = parse_past_ranks(PAST_RANKS)
 
     svg = generate_svg(
-        riot_id=RIOT_ID,
+        riot_id=riot_id_display,
         tier=tier,
         rank=rank,
         lp=lp,
