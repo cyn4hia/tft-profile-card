@@ -25,13 +25,13 @@ jobs:
 
       - name: Generate TFT Stats Card
         env:
-          RIOT_API_KEY: ${{ secrets.RGAPI-1043aa59-105f-4014-b5ca-ff1b33241f65 }}
-          RIOT_ID: ${{ secrets.cyn#0004 }}
-          REGION: ${{ vars.REGION || 'na1' }}
-          ROUTING: ${{ vars.ROUTING || 'americas' }}
-          PROFILE_IMAGE_URL: ${{ vars.PROFILE_IMAGE_URL || '' }}
-          MATCH_COUNT: ${{ vars.MATCH_COUNT || '20' }}
-          PAST_RANKS: ${{ vars.PAST_RANKS || '' }}
+          RIOT_API_KEY: "${{ secrets.RGAPI-1043aa59-105f-4014-b5ca-ff1b33241f65 }}"
+          RIOT_ID: "${{ secrets.cyn#0004 }}"
+          REGION: "${{ vars.REGION || 'na1' }}"
+          ROUTING: "${{ vars.ROUTING || 'americas' }}"
+          PROFILE_IMAGE_URL: "${{ vars.PROFILE_IMAGE_URL || '' }}"
+          MATCH_COUNT: "${{ vars.MATCH_COUNT || '20' }}"
+          PAST_RANKS: "${{ vars.PAST_RANKS || '' }}"
           OUTPUT_PATH: "tft-stats.svg"
         run: python generate_card.py
 

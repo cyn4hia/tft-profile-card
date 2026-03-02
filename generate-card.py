@@ -13,8 +13,6 @@ import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
 
-RIOT_API_KEY = os.environ.get("RIOT_API_KEY", "")
-RIOT_ID = os.environ.get("RIOT_ID", "")  
 REGION = os.environ.get("REGION", "na1")  
 ROUTING = os.environ.get("ROUTING", "americas") 
 PROFILE_IMAGE_URL = os.environ.get("PROFILE_IMAGE_URL", "") 
