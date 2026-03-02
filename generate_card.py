@@ -27,7 +27,6 @@ OUTPUT_PATH = os.environ.get("OUTPUT_PATH", "tft-stats.svg")
 PROXY_URL = os.environ.get("PROXY_URL", "") 
 
 def api_request(url: str) -> dict:
-    """Make request to Riot API, optionally through a Cloudflare Worker proxy."""
     if PROXY_URL:
         proxy = f"{PROXY_URL.rstrip('/')}/?url={urllib.parse.quote(url, safe='')}"
         req = urllib.request.Request(proxy, headers={"User-Agent": "TFT-Stats-Card/1.0"})
@@ -36,9 +35,12 @@ def api_request(url: str) -> dict:
 
     try:
         with urllib.request.urlopen(req) as resp:
-            return json.loads(resp.read().decode())
+            body = resp.read().decode()
+            print(f"  Response ({resp.status}): {body[:200]}", file=sys.stderr)
+            return json.loads(body)
     except urllib.error.HTTPError as e:
-        print(f"API Error {e.code}: {e.read().decode()}", file=sys.stderr)
+        error_body = e.read().decode()
+        print(f"API Error {e.code}: {error_body[:500]}", file=sys.stderr)
         raise
 
 def get_puuid(game_name: str, tag_line: str) -> str:
