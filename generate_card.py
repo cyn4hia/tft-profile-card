@@ -375,7 +375,7 @@ def generate_svg(
   <text x="94" y="44" fill="#d4e6f7" font-size="17" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="800">{display_name}</text>
 
   <!-- Rank badge pill -->
-  <rect x="94" y="52" width="{len(tier_display) * 7.2 + 35:.0f}" height="24" rx="12" fill="{rank_color}" opacity="0.12" stroke="{rank_color}" stroke-width="0.5" stroke-opacity="0.3"/>
+  <rect x="94" y="52" width="{len(tier_display) * 7.2 + 50:.0f}" height="24" rx="12" fill="{rank_color}" opacity="0.12" stroke="{rank_color}" stroke-width="0.5" stroke-opacity="0.3"/>
   <text x="106" y="69" fill="{rank_color}" font-size="12" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700">✦ {escape_xml(tier_display)}</text>
   <text x="{111 + len(tier_display) * 7.2:.0f}" y="69" fill="#5a8ab5" font-size="11" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="600">{lp} LP</text>
 
@@ -401,7 +401,7 @@ def generate_svg(
 
   <!-- Placement spread -->
   <text x="145" y="230" fill="#5a8ab5" font-size="9" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ PLACEMENTS</text>
-  {placement_bar}
+  {placement_bar} 
 
   <!-- Footer -->
   <text x="{card_w - 28}" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Nunito', 'Segoe UI', sans-serif" text-anchor="end">✦ Updated {datetime.now(timezone.utc).strftime('%b %d, %Y %H:%M UTC')}</text>
