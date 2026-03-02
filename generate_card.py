@@ -384,15 +384,14 @@ def generate_mock_card() -> str:
 
 def main():
 
-    if not RIOT_API_KEY:
-        print("⚠  No RIOT_API_KEY set. Generating preview card with mock data.")
+    if not RIOT_API_KEY and not PROXY_URL:
+        print("No RIOT_API_KEY or PROXY_URL set. Generating preview card with mock data.")
         svg = generate_mock_card()
         with open(OUTPUT_PATH, "w") as f:
             f.write(svg)
         print(f"✓  Preview card saved to {OUTPUT_PATH}")
         return
 
-    # Resolve Riot ID from either split env vars or combined RIOT_ID
     if RIOT_GAME_NAME and RIOT_TAG_LINE:
         game_name = RIOT_GAME_NAME
         tag_line = RIOT_TAG_LINE
