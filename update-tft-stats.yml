@@ -1,0 +1,42 @@
+name: Update TFT Stats Card
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "generate_card.py"
+
+jobs:
+  update-card:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate TFT Stats Card
+        env:
+          RIOT_API_KEY: ${{ secrets.RGAPI-1043aa59-105f-4014-b5ca-ff1b33241f65 }}
+          RIOT_ID: ${{ secrets.cyn#0004 }}
+          REGION: ${{ vars.REGION || 'na1' }}
+          ROUTING: ${{ vars.ROUTING || 'americas' }}
+          PROFILE_IMAGE_URL: ${{ vars.PROFILE_IMAGE_URL || '' }}
+          MATCH_COUNT: ${{ vars.MATCH_COUNT || '20' }}
+          PAST_RANKS: ${{ vars.PAST_RANKS || '' }}
+          OUTPUT_PATH: "tft-stats.svg"
+        run: python generate_card.py
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add tft-stats.svg profile-icon.png
+          git diff --staged --quiet || (git commit -m "Update TFT stats card" && git push)
