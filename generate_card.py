@@ -1,6 +1,5 @@
 """
-TFT Stats Card Generator for GitHub README
-Fetches TFT stats from the Riot Games API and generates a clean SVG card.
+tft stat generator yippeee
 """
 
 import os
@@ -26,7 +25,7 @@ OUTPUT_PATH = os.environ.get("OUTPUT_PATH", "tft-stats.svg")
 PROXY_URL = os.environ.get("PROXY_URL", "") 
 
 def api_request(url: str) -> dict:
-    """Make authenticated request to Riot API."""
+    """ auth to riot api """
     headers = {
         "X-Riot-Token": RIOT_API_KEY,
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -39,7 +38,7 @@ def api_request(url: str) -> dict:
     return resp.json()
 
 def get_puuid(game_name: str, tag_line: str) -> str:
-    """Get PUUID from Riot ID (gameName#tagLine)."""
+    """get puuid from riot id"""
     encoded_name = urllib.parse.quote(game_name)
     encoded_tag = urllib.parse.quote(tag_line)
     url = f"https://{ROUTING}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{encoded_name}/{encoded_tag}"
@@ -48,18 +47,17 @@ def get_puuid(game_name: str, tag_line: str) -> str:
 
 
 def get_summoner_by_puuid(puuid: str) -> dict:
-    """Get summoner data (for profile icon ID)."""
+    """get summoner id"""
     url = f"https://{REGION}.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/{puuid}"
     return api_request(url)
 
 
 def get_ranked_stats(puuid: str) -> dict | None:
-    """Get TFT ranked stats by PUUID."""
+    """get tft ranked stats using puuid"""
     url = f"https://{REGION}.api.riotgames.com/tft/league/v1/entries/by-puuid/{puuid}"
 
 def download_icon(icon_id: int, save_path: str = "profile-icon.png") -> str:
-    """Download profile icon from Data Dragon and return base64 data URI.
-    Also saves the PNG as a backup file."""
+    """download png icon but also save here as backup"""
     url = PROFILE_IMAGE_URL if PROFILE_IMAGE_URL else f"https://ddragon.leagueoflegends.com/cdn/14.24.1/img/profileicon/{icon_id}.png"
     try:
         resp = req_lib.get(url)
@@ -78,7 +76,7 @@ def download_icon(icon_id: int, save_path: str = "profile-icon.png") -> str:
 
 
 def get_placeholder_icon_data_uri() -> str:
-    """Generate a simple placeholder circle as an SVG data URI for mock/fallback."""
+    """placeholder for icon"""
     placeholder_svg = (
         '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">'
         '<rect width="64" height="64" rx="32" fill="#2a2a2a"/>'
@@ -90,18 +88,18 @@ def get_placeholder_icon_data_uri() -> str:
 
 
 def get_match_ids(puuid: str, count: int = 20) -> list[str]:
-    """Get recent TFT match IDs."""
+    """get recent tft match ids"""
     url = f"https://{ROUTING}.api.riotgames.com/tft/match/v1/matches/by-puuid/{puuid}/ids?count={count}"
     return api_request(url)
 
 
 def get_match_detail(match_id: str) -> dict:
-    """Get full match data."""
+    """get full match data"""
     url = f"https://{ROUTING}.api.riotgames.com/tft/match/v1/matches/{match_id}"
     return api_request(url)
 
 def process_matches(puuid: str, match_ids: list[str]) -> dict:
-    """Analyze recent matches for stats."""
+    """analyze recent matches for stats"""
     placements = []
     top4_count = 0
     wins = 0
@@ -141,7 +139,7 @@ def process_matches(puuid: str, match_ids: list[str]) -> dict:
 
 
 def parse_past_ranks(raw: str) -> list[dict]:
-    """Parse PAST_RANKS env var. Format: 'Set10:Diamond,Set9:Platinum IV'"""
+    """parse - format: 'Set10:Diamond,Set9:Platinum IV'"""
     if not raw.strip():
         return []
     ranks = []
@@ -164,53 +162,6 @@ RANK_COLORS = {
     "GRANDMASTER": "#e34444",
     "CHALLENGER": "#f5c542",
 }
-
-
-def get_rank_color(tier: str) -> str:
-    return RANK_COLORS.get(tier.upper(), "#888888")
-
-
-def escape_xml(text: str) -> str:
-    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
-
-
-def generate_placement_sparkline(placements: list[int], x_start: int, y_center: int, width: int, height: int) -> str:
-    """Generate an SVG sparkline for recent placements."""
-    if not placements:
-        return ""
-
-    n = len(placements)
-    step_x = width / max(n - 1, 1)
-    scale_y = height / 7 
-
-    points = []
-    dots = []
-    for i, p in enumerate(placements):
-        x = x_start + i * step_x
-        y = y_center - height / 2 + (p - 1) * scale_y
-        points.append(f"{x:.1f},{y:.1f}")
-
-        color = "#4ade80" if p <= 4 else "#f87171"
-        dots.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.5" fill="{color}" opacity="0.9"/>')
-
-    polyline = f'<polyline points="{" ".join(points)}" fill="none" stroke="#555" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>'
-
-    return polyline + "\n".join(dots)
-
-
-RANK_COLORS = {
-    "IRON": "#8b9bb0",
-    "BRONZE": "#c49a6c",
-    "SILVER": "#b8c4d4",
-    "GOLD": "#f0c75e",
-    "PLATINUM": "#6ecfc0",
-    "EMERALD": "#50c878",
-    "DIAMOND": "#91a8ff",
-    "MASTER": "#c488f0",
-    "GRANDMASTER": "#ff7b7b",
-    "CHALLENGER": "#ffd770",
-}
-
 
 def get_rank_color(tier: str) -> str:
     return RANK_COLORS.get(tier.upper(), "#91a8ff")
@@ -264,7 +215,7 @@ def generate_svg(
     icon_data_uri: str,
     past_ranks: list[dict],
 ) -> str:
-    """Generate a cute blue-themed SVG stats card."""
+    """gen svg card"""
 
     display_name = escape_xml(riot_id)
     rank_color = get_rank_color(tier)
@@ -292,7 +243,7 @@ def generate_svg(
     past_ranks_svg = ""
     if past_ranks:
         y_pr = card_h - 65
-        past_ranks_svg += f'<text x="28" y="{y_pr}" fill="#7a9cc6" font-size="10" font-family="\'Nunito\', \'Segoe UI\', sans-serif" font-weight="700" letter-spacing="1">✧ PAST SEASONS</text>'
+        past_ranks_svg += f'<text x="28" y="{y_pr}" fill="#7a9cc6" font-size="10" font-family="\'Nunito\', \'Segoe UI\', sans-serif" font-weight="700" letter-spacing="1">✧ PAST SETS</text>'
         x_offset = 28
         for pr in past_ranks[:6]:
             label = f"{escape_xml(pr['season'])}: {escape_xml(pr['rank'])}"
@@ -304,7 +255,7 @@ def generate_svg(
             x_offset += pill_w + 8
 
     sparkline_svg = generate_placement_sparkline(
-        match_stats["placements"][-15:], x_start=248, y_center=162, width=160, height=40
+        match_stats["placements"][:15][::-1], x_start=248, y_center=162, width=160, height=40
     )
 
     def stat_bubble(cx, cy, label, value, sub, color="#7ec8e3"):
@@ -396,8 +347,8 @@ def generate_svg(
   {sparkline_svg}
 
   <!-- Sparkline labels -->
-  <text x="248" y="190" fill="#3d6d94" font-size="7.5" font-family="'Nunito', 'Segoe UI', sans-serif">1st</text>
-  <text x="248" y="140" fill="#3d6d94" font-size="7.5" font-family="'Nunito', 'Segoe UI', sans-serif">8th</text>
+  <text x="248" y="190" fill="#3d6d94" font-size="7.5" font-family="'Nunito', 'Segoe UI', sans-serif">8th</text>
+  <text x="248" y="140" fill="#3d6d94" font-size="7.5" font-family="'Nunito', 'Segoe UI', sans-serif">1st</text>
 
   <!-- Placement spread -->
   <text x="145" y="230" fill="#5a8ab5" font-size="9" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ PLACEMENTS</text>
@@ -405,7 +356,7 @@ def generate_svg(
 
   <!-- Footer -->
   <text x="{card_w - 28}" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Nunito', 'Segoe UI', sans-serif" text-anchor="end">✦ Updated {datetime.now(timezone.utc).strftime('%b %d, %Y %H:%M UTC')}</text>
-  <text x="28" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Nunito', 'Segoe UI', sans-serif">♡ glhf</text>
+  <text x="28" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Nunito', 'Segoe UI', sans-serif">match history card designed by cindy!!</text>
 
   {past_ranks_svg}
 
@@ -415,7 +366,7 @@ def generate_svg(
 
 
 def generate_placement_bar(placements: list[int], x: int, y: int, width: int, height: int) -> str:
-    """Generate a cute rounded placement distribution bar."""
+    """gen the placement bar 1 - 8"""
     if not placements:
         return ""
 
@@ -451,9 +402,161 @@ def generate_placement_bar(placements: list[int], x: int, y: int, width: int, he
     svg = f'<clipPath id="bar-clip"><rect x="{x}" y="{y}" width="{width}" height="{height}" rx="8"/></clipPath><g clip-path="url(#bar-clip)">{svg}</g>'
 
     return svg
+CHIBI_COSMETICS = {
+    "PetChibiLux": {
+        "tactician_name": "Chibi Porcelain Lux",
+        "arena": "Heaven's Celestial Court",
+        "boom": "Porcelain Final Spark",
+        "portal": "Porcelain Bloom",
+        "arena_img": "cosmetics/koi-arena.jpg",
+        "boom_img": "cosmetics/porcelain-boom.png",
+        "portal_img": "cosmetics/porcelain-portal.png",
+    }
+}
+
+def get_companion_from_match(puuid: str, match_ids: list[str]) -> dict | None:
+    """get recent tactician used"""
+    if not match_ids:
+        return None
+    try:
+        match = get_match_detail(match_ids[0])
+        for p in match.get("info", {}).get("participants", []):
+            if p.get("puuid") == puuid:
+                return p.get("companion", {})
+    except Exception as e:
+        print(f"  ⚠ Could not get companion data: {e}", file=sys.stderr)
+    return None
+
+
+def get_tactician_image_uri(item_id: int) -> str:
+    """get tact img"""
+    try:
+        versions_url = "https://ddragon.leagueoflegends.com/api/versions.json"
+        resp = req_lib.get(versions_url)
+        latest = resp.json()[0]
+
+        tact_url = f"https://ddragon.leagueoflegends.com/cdn/{latest}/data/en_US/tft-tactician.json"
+        resp = req_lib.get(tact_url)
+        tact_data = resp.json().get("data", {})
+
+        entry = tact_data.get(str(item_id))
+        if entry and entry.get("image", {}).get("full"):
+            img_name = entry["image"]["full"]
+            img_url = f"https://ddragon.leagueoflegends.com/cdn/{latest}/img/tft-tactician/{img_name}"
+            resp = req_lib.get(img_url)
+            if resp.status_code == 200:
+                b64 = base64.b64encode(resp.content).decode("ascii")
+                return f"data:image/png;base64,{b64}"
+    except Exception as e:
+        print(f"  ⚠ Could not fetch tactician image: {e}", file=sys.stderr)
+    return ""
+
+
+def load_image_as_data_uri(filepath: str) -> str:
+    """Load a local image file and return as base64 data URI."""
+    try:
+        with open(filepath, "rb") as f:
+            img_bytes = f.read()
+        b64 = base64.b64encode(img_bytes).decode("ascii")
+        ext = filepath.rsplit(".", 1)[-1].lower()
+        mime = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "webp": "image/webp"}.get(ext, "image/png")
+        return f"data:{mime};base64,{b64}"
+    except FileNotFoundError:
+        return ""
+
+
+def generate_cosmetics_svg(
+    companion: dict,
+    tactician_img_uri: str,
+    cosmetics: dict,
+) -> str:
+    """generate cosmetics SVG"""
+
+    species = companion.get("species", "Unknown")
+    tactician_name = cosmetics.get("tactician_name", species.replace("PetChibi", "Chibi "))
+
+    arena_uri = load_image_as_data_uri(cosmetics.get("arena_img", ""))
+    boom_uri = load_image_as_data_uri(cosmetics.get("boom_img", ""))
+    portal_uri = load_image_as_data_uri(cosmetics.get("portal_img", ""))
+
+    card_w = 160
+    card_h = 340
+
+    def cosmetic_slot(y, label, name, img_uri):
+        """generate one cosmetic slot with image and label"""
+        if img_uri:
+            img_el = f'''
+            <clipPath id="clip-{label.lower()}"><rect x="30" y="{y}" width="100" height="40" rx="8"/></clipPath>
+            <rect x="30" y="{y}" width="100" height="40" rx="8" fill="#0d2137"/>
+            <image href="{img_uri}" x="30" y="{y}" width="100" height="40" clip-path="url(#clip-{label.lower()})" preserveAspectRatio="xMidYMid slice" opacity="0.8"/>
+            '''
+        else:
+            img_el = f'''
+            <rect x="30" y="{y}" width="100" height="40" rx="8" fill="#0d2137" stroke="#1a3a5a" stroke-width="0.5" stroke-dasharray="3,2"/>
+            <text x="80" y="{y + 23}" fill="#2a5a8a" font-size="8" font-family="'Nunito', 'Segoe UI', sans-serif" text-anchor="middle">add image</text>
+            '''
+        return f'''
+        <text x="80" y="{y - 6}" fill="#5a8ab5" font-size="8" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" letter-spacing="0.8">{escape_xml(label.upper())}</text>
+        {img_el}
+        <text x="80" y="{y + 52}" fill="#3d6d94" font-size="7" font-family="'Nunito', 'Segoe UI', sans-serif" text-anchor="middle">{escape_xml(name)}</text>
+        '''
+
+    # Tactician section
+    if tactician_img_uri:
+        tact_img = f'''
+        <clipPath id="clip-tact"><circle cx="80" cy="62" r="30"/></clipPath>
+        <circle cx="80" cy="62" r="31" fill="none" stroke="#7ec8e3" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="80" cy="62" r="30" fill="#0d2137"/>
+        <image href="{tactician_img_uri}" x="50" y="32" width="60" height="60" clip-path="url(#clip-tact)" preserveAspectRatio="xMidYMid slice"/>
+        '''
+    else:
+        tact_img = f'''
+        <circle cx="80" cy="62" r="30" fill="#0d2137" stroke="#1a3a5a" stroke-width="0.5" stroke-dasharray="3,2"/>
+        <text x="80" y="66" fill="#2a5a8a" font-size="9" font-family="'Nunito', 'Segoe UI', sans-serif" text-anchor="middle">?</text>
+        '''
+
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="{card_w}" height="{card_h}" viewBox="0 0 {card_w} {card_h}" fill="none">
+
+  <defs>
+    <linearGradient id="cos-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a1628"/>
+      <stop offset="100%" stop-color="#0a1a30"/>
+    </linearGradient>
+    <linearGradient id="cos-border" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e4a7a" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#1e4a7a" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Card Background -->
+  <rect width="{card_w}" height="{card_h}" rx="16" fill="url(#cos-bg)"/>
+  <rect width="{card_w}" height="{card_h}" rx="16" fill="none" stroke="url(#cos-border)" stroke-width="1.5"/>
+
+  <!-- Top accent -->
+  <rect x="30" y="0" width="100" height="2.5" rx="1.25" fill="#7ec8e3" opacity="0.4"/>
+
+  <!-- Title -->
+  <text x="80" y="22" fill="#7a9cc6" font-size="9" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" letter-spacing="1.5">✧ LOADOUT</text>
+
+  <!-- Tactician -->
+  {tact_img}
+  <text x="80" y="104" fill="#d4e6f7" font-size="9" font-family="'Nunito', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle">{escape_xml(tactician_name)}</text>
+
+  <!-- Cosmetic slots -->
+  {cosmetic_slot(125, "Arena", cosmetics.get("arena", ""), arena_uri)}
+  {cosmetic_slot(195, "Boom", cosmetics.get("boom", ""), boom_uri)}
+  {cosmetic_slot(265, "Portal", cosmetics.get("portal", ""), portal_uri)}
+
+  <!-- Footer -->
+  <text x="80" y="{card_h - 10}" fill="#1e3a5a" font-size="7" font-family="'Nunito', 'Segoe UI', sans-serif" text-anchor="middle">♡ auto-detected</text>
+
+</svg>'''
+
+    return svg
 
 def generate_mock_card() -> str:
-    """Generate a card with placeholder data for preview/testing."""
+    """mock card gen"""
     mock_match_stats = {
         "placements": [2, 4, 1, 6, 3, 5, 1, 4, 2, 7, 3, 1, 5, 2, 4],
         "games_analyzed": 15,
@@ -540,6 +643,7 @@ def main():
         print(f"  Participants: {len(info.get('participants', []))}")
 
     match_stats = process_matches(puuid, match_ids)
+    print(f"  Placements: {match_stats['placements']}")
     print(f"  Avg placement: {match_stats['avg_placement']:.2f}, Top 4: {match_stats['top4_rate']:.1f}%")
 
     past_ranks = [
@@ -561,10 +665,36 @@ def main():
         past_ranks=past_ranks,
     )
 
+    companion = get_companion_from_match(puuid, match_ids)
+    if companion:
+        species = companion.get("species", "")
+        print(f"  Companion: {species} (item_ID: {companion.get('item_ID')}, skin_ID: {companion.get('skin_ID')})")
+
+        cosmetics = CHIBI_COSMETICS.get(species, {})
+        if cosmetics:
+
+            tact_uri = get_tactician_image_uri(companion.get("item_ID", 0))
+            if tact_uri:
+                print(f"  ✓ Fetched tactician image from Data Dragon")
+            else:
+                print(f"  ⚠ Could not fetch tactician image")
+
+            cosmetics_svg = generate_cosmetics_svg(companion, tact_uri, cosmetics)
+            cosmetics_path = str(Path(OUTPUT_PATH).parent / "tft-cosmetics.svg")
+            with open(cosmetics_path, "w") as f:
+                f.write(cosmetics_svg)
+            print(f"✓  Cosmetics card saved to {cosmetics_path}")
+        else:
+            print(f"  ⚠ No cosmetics mapping for {species}. Add it to CHIBI_COSMETICS.")
+    else:
+        print("  ⚠ Could not detect companion from match data.")
+
     with open(OUTPUT_PATH, "w") as f:
         f.write(svg)
 
     print(f"✓  Card saved to {OUTPUT_PATH}")
+
+
 
 
 if __name__ == "__main__":
