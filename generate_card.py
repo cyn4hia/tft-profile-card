@@ -24,17 +24,22 @@ PROFILE_IMAGE_URL = os.environ.get("PROFILE_IMAGE_URL", "")
 MATCH_COUNT = int(os.environ.get("MATCH_COUNT", "20"))  
 PAST_RANKS = os.environ.get("PAST_RANKS", "")  
 OUTPUT_PATH = os.environ.get("OUTPUT_PATH", "tft-stats.svg")
+PROXY_URL = os.environ.get("PROXY_URL", "") 
 
 def api_request(url: str) -> dict:
-    """Make authenticated request to Riot API."""
-    req = urllib.request.Request(url, headers={"X-Riot-Token": RIOT_API_KEY})
+    """Make request to Riot API, optionally through a Cloudflare Worker proxy."""
+    if PROXY_URL:
+        proxy = f"{PROXY_URL.rstrip('/')}/?url={urllib.parse.quote(url, safe='')}"
+        req = urllib.request.Request(proxy)
+    else:
+        req = urllib.request.Request(url, headers={"X-Riot-Token": RIOT_API_KEY})
+
     try:
         with urllib.request.urlopen(req) as resp:
             return json.loads(resp.read().decode())
     except urllib.error.HTTPError as e:
         print(f"API Error {e.code}: {e.read().decode()}", file=sys.stderr)
         raise
-
 
 def get_puuid(game_name: str, tag_line: str) -> str:
     """Get PUUID from Riot ID (gameName#tagLine)."""

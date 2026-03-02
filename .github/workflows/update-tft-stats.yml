@@ -26,9 +26,9 @@ jobs:
       - name: Generate TFT Stats Card
         run: python generate_card.py
         env:
-          RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
-          RIOT_GAME_NAME: ${{ secrets.RIOT_GAME_NAME }}
-          RIOT_TAG_LINE: ${{ secrets.RIOT_TAG_LINE }}
+          PROXY_URL: "${{ secrets.PROXY_URL }}"
+          RIOT_GAME_NAME: "${{ secrets.RIOT_GAME_NAME }}"
+          RIOT_TAG_LINE: "${{ secrets.RIOT_TAG_LINE }}"
           REGION: "na1"
           ROUTING: "americas"
           MATCH_COUNT: "20"
