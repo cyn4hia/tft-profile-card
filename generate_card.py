@@ -7,9 +7,8 @@ import os
 import sys
 import json
 import base64
-import urllib.request
-import urllib.error
 import urllib.parse
+import requests as req_lib
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -27,21 +26,17 @@ OUTPUT_PATH = os.environ.get("OUTPUT_PATH", "tft-stats.svg")
 PROXY_URL = os.environ.get("PROXY_URL", "") 
 
 def api_request(url: str) -> dict:
-    if PROXY_URL:
-        proxy = f"{PROXY_URL.rstrip('/')}/?url={urllib.parse.quote(url, safe='')}"
-        req = urllib.request.Request(proxy, headers={"User-Agent": "TFT-Stats-Card/1.0"})
-    else:
-        req = urllib.request.Request(url, headers={"X-Riot-Token": RIOT_API_KEY})
-
-    try:
-        with urllib.request.urlopen(req) as resp:
-            body = resp.read().decode()
-            print(f"  Response ({resp.status}): {body[:200]}", file=sys.stderr)
-            return json.loads(body)
-    except urllib.error.HTTPError as e:
-        error_body = e.read().decode()
-        print(f"API Error {e.code}: {error_body[:500]}", file=sys.stderr)
-        raise
+    """Make authenticated request to Riot API."""
+    headers = {
+        "X-Riot-Token": RIOT_API_KEY,
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "application/json",
+    }
+    resp = req_lib.get(url, headers=headers)
+    if resp.status_code != 200:
+        print(f"API Error {resp.status_code}: {resp.text[:500]}", file=sys.stderr)
+        resp.raise_for_status()
+    return resp.json()
 
 def get_puuid(game_name: str, tag_line: str) -> str:
     """Get PUUID from Riot ID (gameName#tagLine)."""
@@ -58,24 +53,17 @@ def get_summoner_by_puuid(puuid: str) -> dict:
     return api_request(url)
 
 
-def get_ranked_stats(summoner_id: str) -> dict | None:
-    """Get TFT ranked stats for a summoner."""
-    url = f"https://{REGION}.api.riotgames.com/tft/league/v1/entries/by-summoner/{summoner_id}"
-    entries = api_request(url)
-    for entry in entries:
-        if entry.get("queueType") == "RANKED_TFT":
-            return entry
-    return None
-
+def get_ranked_stats(puuid: str) -> dict | None:
+    """Get TFT ranked stats by PUUID."""
+    url = f"https://{REGION}.api.riotgames.com/tft/league/v1/entries/by-puuid/{puuid}"
 
 def download_icon(icon_id: int, save_path: str = "profile-icon.png") -> str:
     """Download profile icon from Data Dragon and return base64 data URI.
     Also saves the PNG as a backup file."""
     url = PROFILE_IMAGE_URL if PROFILE_IMAGE_URL else f"https://ddragon.leagueoflegends.com/cdn/14.24.1/img/profileicon/{icon_id}.png"
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "TFT-Stats-Card/1.0"})
-        with urllib.request.urlopen(req) as resp:
-            img_bytes = resp.read()
+        resp = req_lib.get(url)
+        img_bytes = resp.content
 
         with open(save_path, "wb") as f:
             f.write(img_bytes)
@@ -410,26 +398,40 @@ def main():
     print(f"  PUUID: {puuid[:12]}...")
 
     summoner = get_summoner_by_puuid(puuid)
+    print(f"  Summoner data keys: {list(summoner.keys())}")
     profile_icon_id = summoner.get("profileIconId", 1)
     print(f"  Profile Icon ID: {profile_icon_id}")
 
     icon_png_path = str(Path(OUTPUT_PATH).parent / "profile-icon.png")
     icon_data_uri = download_icon(profile_icon_id, save_path=icon_png_path)
 
-    ranked = get_ranked_stats(summoner["id"])
-    if ranked:
-        tier = ranked.get("tier", "UNRANKED")
-        rank = ranked.get("rank", "")
-        lp = ranked.get("leaguePoints", 0)
-        wins = ranked.get("wins", 0)
-        losses = ranked.get("losses", 0)
-        print(f"  Rank: {tier} {rank} - {lp} LP ({wins}W/{losses}L)")
+    try:
+        ranked = get_ranked_stats(puuid)
+    except Exception:
+        ranked = None
+
+    tier = os.environ.get("TFT_RANK_TIER", "")
+    rank = os.environ.get("TFT_RANK_DIVISION", "")
+    lp = int(os.environ.get("TFT_RANK_LP", "0"))
+    if tier:
+        print(f"  Rank (manual): {tier} {rank} - {lp} LP")
     else:
-        tier, rank, lp, wins, losses = "UNRANKED", "", 0, 0, 0
-        print("  No ranked data found.")
+        tier = "UNRANKED"
+        print("  No rank set — add TFT_RANK_TIER env var to display rank.")
 
     match_ids = get_match_ids(puuid, count=MATCH_COUNT)
     print(f"  Found {len(match_ids)} matches. Analyzing...")
+
+    if match_ids:
+        print(f"  First match ID: {match_ids[0]}")
+
+    if match_ids:
+        first_match = get_match_detail(match_ids[0])
+        info = first_match.get("info", {})
+        print(f"  Queue ID: {info.get('queue_id', 'N/A')}")
+        print(f"  Game type: {info.get('tft_game_type', 'N/A')}")
+        print(f"  Set: {info.get('tft_set_number', 'N/A')}")
+        print(f"  Participants: {len(info.get('participants', []))}")
 
     match_stats = process_matches(puuid, match_ids)
     print(f"  Avg placement: {match_stats['avg_placement']:.2f}, Top 4: {match_stats['top4_rate']:.1f}%")
@@ -441,8 +443,8 @@ def main():
         tier=tier,
         rank=rank,
         lp=lp,
-        wins=wins,
-        losses=losses,
+        wins=match_stats["wins"],
+        losses=match_stats["games_analyzed"] - match_stats["wins"],
         match_stats=match_stats,
         icon_data_uri=icon_data_uri,
         past_ranks=past_ranks,
