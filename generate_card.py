@@ -30,7 +30,7 @@ def api_request(url: str) -> dict:
     """Make request to Riot API, optionally through a Cloudflare Worker proxy."""
     if PROXY_URL:
         proxy = f"{PROXY_URL.rstrip('/')}/?url={urllib.parse.quote(url, safe='')}"
-        req = urllib.request.Request(proxy)
+        req = urllib.request.Request(proxy, headers={"User-Agent": "TFT-Stats-Card/1.0"})
     else:
         req = urllib.request.Request(url, headers={"X-Riot-Token": RIOT_API_KEY})
 
