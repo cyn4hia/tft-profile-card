@@ -23,6 +23,10 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Test proxy connection
+        run: |
+          curl -v "${{ secrets.PROXY_URL }}/?url=https%3A%2F%2Famericas.api.riotgames.com%2Friot%2Faccount%2Fv1%2Faccounts%2Fby-riot-id%2Ftest%2FNA1"
+
       - name: Generate TFT Stats Card
         run: python generate_card.py
         env:
