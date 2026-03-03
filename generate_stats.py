@@ -75,13 +75,12 @@ def generate_placement_bar(placements, x, y, width, height):
         else:
             svg += f'<rect x="{x_offset:.1f}" y="{y}" width="{w:.1f}" height="{height}" fill="{colors[i]}" opacity="0.75"/>'
         if w > 22:
-            svg += f'<text x="{x_offset + w / 2:.1f}" y="{y + height / 2 + 3}" fill="#0a1628" font-size="7.5" font-family="\'Fredoka\', \'Segoe UI\', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">{labels[i]}</text>'
+            svg += f'<text x="{x_offset + w / 2:.1f}" y="{y + height / 2 + 3}" fill="#0a1628" font-size="8.5" font-family="\'Fredoka\', \'Segoe UI\', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">{labels[i]}</text>'
         if first:
             first = False
         x_offset += w
     svg = f'<clipPath id="bar-clip"><rect x="{x}" y="{y}" width="{width}" height="{height}" rx="8"/></clipPath><g clip-path="url(#bar-clip)">{svg}</g>'
     return svg
-
 
 def generate_svg(riot_id, tier, rank, lp, wins, losses, match_stats, icon_data_uri, past_ranks):
     display_name = escape_xml(riot_id)
@@ -92,11 +91,11 @@ def generate_svg(riot_id, tier, rank, lp, wins, losses, match_stats, icon_data_u
     icon_href = icon_data_uri if icon_data_uri else get_placeholder_icon_data_uri()
 
     card_w = 440
-    card_h = 340
+    card_h = 390
 
     past_ranks_svg = ""
     if past_ranks:
-        y_pr = card_h - 65
+        y_pr = card_h - 115
         past_ranks_svg += f'<text x="20" y="{y_pr}" fill="#7a9cc6" font-size="10" font-family="\'Fredoka\', \'Segoe UI\', sans-serif" font-weight="700" letter-spacing="1">✧ PAST SETS</text>'
         x_offset = 20
         for pr in past_ranks[:6]:
@@ -107,6 +106,23 @@ def generate_svg(riot_id, tier, rank, lp, wins, losses, match_stats, icon_data_u
             <text x="{x_offset + pill_w / 2:.0f}" y="{y_pr + 22}" fill="#8bbce0" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle">{label}</text>
             '''
             x_offset += pill_w + 8
+    good_comp_svg = ""
+    y_comp = card_h - 55
+    x_offset = 20
+    good_text = "Void Fast 10 Kai'Sa"
+    good_pill_w = len(good_text) * 5 + 16
+    good_x = 20
+    good_comp_svg += f'<rect x="{good_x}" y="{y_comp + 1}" width="{good_pill_w:.0f}" height="20" rx="11" fill="#96D294" stroke="#2a5080" stroke-width="0.5"/>'
+    good_comp_svg += f'<text x="{good_x + good_pill_w / 2:.0f}" y="{y_comp + 15}" fill="#FFFFFF" font-size="9" font-family="\'Fredoka\', \'Segoe UI\', sans-serif" font-weight="600" text-anchor="middle">Void Fast 10 Kai\'Sa</text>'
+
+    bad_comp_svg = ""
+    y_bad_comp = card_h - 55
+    x_offset = 220
+    bad_text = "Warwick Zaun"
+    bad_pill_w = len(bad_text) * 5 + 16
+    bad_x = 220
+    bad_comp_svg += f'<rect x="{bad_x}" y="{y_bad_comp + 1}" width="{bad_pill_w:.0f}" height="20" rx="11" fill="#FF6961" stroke="#2a5080" stroke-width="0.5"/>'
+    bad_comp_svg += f'<text x="{bad_x + bad_pill_w / 2:.0f}" y="{y_bad_comp + 15}" fill="#FFFFFF" font-size="9" font-family="\'Fredoka\', \'Segoe UI\', sans-serif" font-weight="600" text-anchor="middle">Warwick Zaun</text>'
 
     sparkline_svg = generate_placement_sparkline(
         match_stats["placements"][:15][::-1], x_start=248, y_center=162, width=160, height=40
@@ -123,7 +139,7 @@ def generate_svg(riot_id, tier, rank, lp, wins, losses, match_stats, icon_data_u
     stats_svg = stat_bubble(60, 155, "WIN RATE", f"{match_stats['top4_rate']:.0f}%", f"{match_stats['top4']}W {match_stats['games_analyzed']}L", "#98d4ee")
     stats_svg += stat_bubble(155, 155, "AVG PLACE", f"{match_stats['avg_placement']:.1f}", f"last {match_stats['games_analyzed']}", "#b0c4de")
 
-    placement_bar = generate_placement_bar(match_stats["placements"], 20, 233, 400, 16)
+    placement_bar = generate_placement_bar(match_stats["placements"], 20, 232, 400, 20)
 
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         width="{card_w}" height="{card_h}" viewBox="0 0 {card_w} {card_h}" fill="none">
@@ -195,8 +211,13 @@ def generate_svg(riot_id, tier, rank, lp, wins, losses, match_stats, icon_data_u
   <text x="20" y="225" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ PLACEMENTS</text>
   {placement_bar}
 
-  <text x="{card_w - 28}" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="end">✦ Updated {datetime.now(timezone.utc).strftime('%b %d, %Y %H:%M UTC')}</text>
-  <text x="28" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif">match history card designed by cindy!!</text>
+  <text x="20" y="328" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif" xml:space="preserve">FAVORITE COMP:</text>
+  <text x="220" y="328" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif" xml:space="preserve">HATED COMP:</text>
+  {good_comp_svg}
+  {bad_comp_svg}
+
+  <text x="{card_w - 20}" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="end">✦ Updated {datetime.now(timezone.utc).strftime('%b %d, %Y %H:%M UTC')}</text>
+  <text x="20" y="{card_h - 16}" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif">match history card designed by cindy!!</text>
 
   {past_ranks_svg}
 

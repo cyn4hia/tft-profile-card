@@ -24,6 +24,7 @@ COSMETICS_OUTPUT = os.environ.get("COSMETICS_OUTPUT", "tft-cosmetics.svg")
 
 
 def get_companion_from_match(puuid, match_ids):
+    """gets tactician using match data"""
     if not match_ids:
         return None
     try:
@@ -37,6 +38,7 @@ def get_companion_from_match(puuid, match_ids):
 
 
 def get_tactician_image_uri(item_id):
+    """gets the tact url from dragon"""
     try:
         versions_url = "https://ddragon.leagueoflegends.com/api/versions.json"
         resp = req_lib.get(versions_url)
@@ -60,6 +62,7 @@ def get_tactician_image_uri(item_id):
 
 
 def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
+    """generates cosmetic svg"""
     species = companion.get("species", "Unknown")
     tactician_name = cosmetics.get("tactician_name", species.replace("PetChibi", "Chibi "))
 
@@ -68,9 +71,10 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
     portal_uri = load_image_as_data_uri(cosmetics.get("portal_img", ""))
 
     card_w = 160
-    card_h = 390
+    card_h = 340
 
     def cosmetic_slot(y, label, name, img_uri):
+        """cosmetic slot"""
         if img_uri:
             img_el = f'''
             <clipPath id="clip-{label.lower()}"><rect x="30" y="{y}" width="100" height="60" rx="8"/></clipPath>
@@ -137,6 +141,7 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
 
 
 def main():
+    """main function"""
     if not RIOT_API_KEY and not PROXY_URL:
         print("No API key set, skipping cosmetics card")
         return
