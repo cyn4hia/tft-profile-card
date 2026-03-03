@@ -23,10 +23,12 @@ RANK_COLORS = {
 
 
 def get_rank_color(tier: str) -> str:
+    """return rank color"""
     return RANK_COLORS.get(tier.upper(), "#91a8ff")
 
 
 def generate_placement_sparkline(placements, x_start, y_center, width, height):
+    """generate sparkline svg for placements"""
     if not placements:
         return ""
     n = len(placements)
@@ -45,6 +47,7 @@ def generate_placement_sparkline(placements, x_start, y_center, width, height):
 
 
 def generate_star(cx, cy, size, opacity=0.3):
+    """generate star svg for placements"""
     h = size / 2
     return f'''<g opacity="{opacity}" transform="translate({cx},{cy})">
       <line x1="-{h}" y1="0" x2="{h}" y2="0" stroke="#a8d8ff" stroke-width="1" stroke-linecap="round"/>
@@ -53,6 +56,7 @@ def generate_star(cx, cy, size, opacity=0.3):
 
 
 def generate_placement_bar(placements, x, y, width, height):
+    """generate placement distribution bar svg"""
     if not placements:
         return ""
     counts = [0] * 8
@@ -83,6 +87,7 @@ def generate_placement_bar(placements, x, y, width, height):
     return svg
 
 def generate_svg(riot_id, tier, rank, lp, wins, losses, match_stats, icon_data_uri, past_ranks):
+    """generate svg card for given stats"""
     display_name = escape_xml(riot_id)
     rank_color = get_rank_color(tier)
     tier_display = f"{tier.capitalize()} {rank}" if rank and rank != "I" and tier.upper() not in ("MASTER", "GRANDMASTER", "CHALLENGER") else tier.capitalize()
@@ -227,6 +232,7 @@ def generate_svg(riot_id, tier, rank, lp, wins, losses, match_stats, icon_data_u
 
 
 def main():
+    """main function"""
     if not RIOT_API_KEY and not PROXY_URL:
         mock_match_stats = {
             "placements": [2, 4, 1, 6, 3, 5, 1, 4, 2, 7, 3, 1, 5, 2, 4],

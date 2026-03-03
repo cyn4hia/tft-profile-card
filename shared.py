@@ -20,6 +20,7 @@ PROXY_URL = os.environ.get("PROXY_URL", "")
 
 
 def api_request(url: str) -> dict:
+    """api request"""
     headers = {
         "X-Riot-Token": RIOT_API_KEY,
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -33,6 +34,7 @@ def api_request(url: str) -> dict:
 
 
 def get_puuid(game_name: str, tag_line: str) -> str:
+    """get puuid from riot api"""
     encoded_name = urllib.parse.quote(game_name)
     encoded_tag = urllib.parse.quote(tag_line)
     url = f"https://{ROUTING}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{encoded_name}/{encoded_tag}"
@@ -41,21 +43,25 @@ def get_puuid(game_name: str, tag_line: str) -> str:
 
 
 def get_summoner_by_puuid(puuid: str) -> dict:
+    """get summoner info by puuid"""
     url = f"https://{REGION}.api.riotgames.com/tft/summoner/v1/summoners/by-puuid/{puuid}"
     return api_request(url)
 
 
 def get_match_ids(puuid: str, count: int = 20) -> list[str]:
+    """return match ids"""
     url = f"https://{ROUTING}.api.riotgames.com/tft/match/v1/matches/by-puuid/{puuid}/ids?count={count}"
     return api_request(url)
 
 
 def get_match_detail(match_id: str) -> dict:
+    """return match detail"""
     url = f"https://{ROUTING}.api.riotgames.com/tft/match/v1/matches/{match_id}"
     return api_request(url)
 
 
 def download_icon(icon_id: int, save_path: str = "profile-icon.png") -> str:
+    """download profile icon from riot api"""
     url = PROFILE_IMAGE_URL if PROFILE_IMAGE_URL else f"https://ddragon.leagueoflegends.com/cdn/14.24.1/img/profileicon/{icon_id}.png"
     try:
         resp = req_lib.get(url)
@@ -71,6 +77,7 @@ def download_icon(icon_id: int, save_path: str = "profile-icon.png") -> str:
 
 
 def get_placeholder_icon_data_uri() -> str:
+    """returns placeholder icon"""
     placeholder_svg = (
         '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64">'
         '<rect width="64" height="64" rx="32" fill="#2a2a2a"/>'
@@ -82,10 +89,12 @@ def get_placeholder_icon_data_uri() -> str:
 
 
 def escape_xml(text: str) -> str:
+    """escape xml special characters"""
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
 def load_image_as_data_uri(filepath: str) -> str:
+    """load local image as data uri"""
     try:
         with open(filepath, "rb") as f:
             img_bytes = f.read()
@@ -98,6 +107,7 @@ def load_image_as_data_uri(filepath: str) -> str:
 
 
 def process_matches(puuid: str, match_ids: list[str]) -> dict:
+    """process match data to extract placements and stats"""
     placements = []
     top4_count = 0
     wins = 0
@@ -136,6 +146,7 @@ def process_matches(puuid: str, match_ids: list[str]) -> dict:
 
 
 def resolve_riot_id():
+    """resolve riot id from environment variables"""
     if RIOT_GAME_NAME and RIOT_TAG_LINE:
         return RIOT_GAME_NAME, RIOT_TAG_LINE
     elif RIOT_ID and "#" in RIOT_ID:
