@@ -180,6 +180,5 @@ def main():
         f.write(svg)
     print(f"cosmetics card saved to {COSMETICS_OUTPUT}")
 
-
 if __name__ == "__main__":
     main()

@@ -297,6 +297,5 @@ def main():
         f.write(svg)
     print(f"stats card saved to {OUTPUT_PATH}")
 
-
 if __name__ == "__main__":
     main()
