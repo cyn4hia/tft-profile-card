@@ -141,7 +141,8 @@ def generate_svg(riot_id, tier, rank, lp, wins, losses, match_stats, icon_data_u
         <text x="{cx}" y="{cy + 22}" fill="#3d6d94" font-size="7.5" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="middle">{sub}</text>
         '''
 
-    stats_svg = stat_bubble(60, 155, "WIN RATE", f"{match_stats['top4_rate']:.0f}%", f"{match_stats['top4']}W {match_stats['games_analyzed']}L", "#98d4ee")
+    losses = match_stats['games_analyzed'] - match_stats['top4']
+    stats_svg = stat_bubble(60, 155, "WIN RATE", f"{match_stats['top4_rate']:.0f}%", f"{match_stats['top4']}W {losses}L", "#98d4ee")
     stats_svg += stat_bubble(155, 155, "AVG PLACE", f"{match_stats['avg_placement']:.1f}", f"last {match_stats['games_analyzed']}", "#b0c4de")
 
     placement_bar = generate_placement_bar(match_stats["placements"], 20, 232, 400, 20)
@@ -281,6 +282,7 @@ def main():
     print(f"  Avg placement: {match_stats['avg_placement']:.2f}, Top 4: {match_stats['top4_rate']:.1f}%")
 
     past_ranks = [
+        {"season": "Set 16", "rank": "Diamond IV"},
         {"season": "Set 15", "rank": "Diamond IV"},
         {"season": "Set 14", "rank": "Diamond IV"},
         {"season": "Set 13", "rank": "Emerald IV"},
@@ -289,7 +291,7 @@ def main():
     svg = generate_svg(
         riot_id=riot_id_display, tier=tier, rank=rank, lp=lp,
         wins=match_stats["wins"],
-        losses=match_stats["games_analyzed"] - match_stats["wins"],
+        losses= 20 - match_stats["wins"],
         match_stats=match_stats, icon_data_uri=icon_data_uri, past_ranks=past_ranks,
     )
 
