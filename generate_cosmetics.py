@@ -61,7 +61,7 @@ def get_tactician_image_uri(item_id):
     return ""
 
 
-def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
+def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics, card_h=399):
     """generates cosmetic svg"""
     species = companion.get("species", "Unknown")
     tactician_name = cosmetics.get("tactician_name", species.replace("PetChibi", "Chibi "))
@@ -131,8 +131,8 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
   <text x="80" y="104" fill="#d4e6f7" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle">{escape_xml(tactician_name)}</text>
 
   {cosmetic_slot(125, "Arena", cosmetics.get("arena", ""), arena_uri)}
-  {cosmetic_slot(217, "Boom", cosmetics.get("boom", ""), boom_uri)}
-  {cosmetic_slot(310, "Portal", cosmetics.get("portal", ""), portal_uri)}
+  {cosmetic_slot(int(125 + (card_h - 125) / 3), "Boom", cosmetics.get("boom", ""), boom_uri)}
+  {cosmetic_slot(int(125 + 2 * (card_h - 125) / 3), "Portal", cosmetics.get("portal", ""), portal_uri)}
 
 
 </svg>'''
