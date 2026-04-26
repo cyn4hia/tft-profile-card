@@ -70,8 +70,8 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
     boom_uri = load_image_as_data_uri(cosmetics.get("boom_img", ""))
     portal_uri = load_image_as_data_uri(cosmetics.get("portal_img", ""))
 
-    card_w = 160
-    card_h = 350
+    card_w = 200
+    card_h = 399
 
     def cosmetic_slot(y, label, name, img_uri):
         """cosmetic slot"""
@@ -94,14 +94,14 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
 
     if tactician_img_uri:
         tact_img = f'''
-        <clipPath id="clip-tact"><circle cx="80" cy="62" r="30"/></clipPath>
-        <circle cx="80" cy="62" r="31" fill="none" stroke="#7ec8e3" stroke-width="1.5" opacity="0.4"/>
-        <circle cx="80" cy="62" r="30" fill="#0d2137"/>
-        <image href="{tactician_img_uri}" x="50" y="32" width="60" height="60" clip-path="url(#clip-tact)" preserveAspectRatio="xMidYMid slice"/>
+        <clipPath id="clip-tact"><circle cx="100" cy="62" r="30"/></clipPath>
+        <circle cx="100" cy="62" r="31" fill="none" stroke="#7ec8e3" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="100" cy="62" r="30" fill="#0d2137"/>
+        <image href="{tactician_img_uri}" x="70" y="32" width="60" height="60" clip-path="url(#clip-tact)" preserveAspectRatio="xMidYMid slice"/>
         '''
     else:
         tact_img = f'''
-        <circle cx="80" cy="62" r="30" fill="#0d2137" stroke="#1a3a5a" stroke-width="0.5" stroke-dasharray="3,2"/>
+        <circle cx="100" cy="62" r="30" fill="#0d2137" stroke="#1a3a5a" stroke-width="0.5" stroke-dasharray="3,2"/>
         <text x="80" y="66" fill="#2a5a8a" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="middle">?</text>
         '''
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -131,8 +131,8 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
   <text x="80" y="104" fill="#d4e6f7" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle">{escape_xml(tactician_name)}</text>
 
   {cosmetic_slot(125, "Arena", cosmetics.get("arena", ""), arena_uri)}
-  {cosmetic_slot(217, "Boom", cosmetics.get("boom", ""), boom_uri)}
-  {cosmetic_slot(310, "Portal", cosmetics.get("portal", ""), portal_uri)}
+  {cosmetic_slot(215, "Boom", cosmetics.get("boom", ""), boom_uri)}
+  {cosmetic_slot(305, "Portal", cosmetics.get("portal", ""), portal_uri)}
 
 
 </svg>'''
