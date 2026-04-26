@@ -77,9 +77,9 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics, card_h=399):
         """cosmetic slot"""
         if img_uri:
             img_el = f'''
-            <clipPath id="clip-{label.lower()}"><rect x="30" y="{y}" width="100" height="60" rx="8"/></clipPath>
+            <clipPath id="cos-clip-{label.lower()}"><rect x="30" y="{y}" width="100" height="60" rx="8"/></clipPath>
             <rect x="30" y="{y}" width="100" height="60" rx="8" fill="#0d2137"/>
-            <image href="{img_uri}" x="30" y="{y}" width="100" height="60" clip-path="url(#clip-{label.lower()})" preserveAspectRatio="xMidYMid slice" opacity="0.8"/>
+            <image href="{img_uri}" x="30" y="{y}" width="100" height="60" clip-path="url(#cos-clip-{label.lower()})" preserveAspectRatio="xMidYMid slice" opacity="0.8"/>
             '''
         else:
             img_el = f'''
