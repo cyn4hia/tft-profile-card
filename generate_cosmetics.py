@@ -71,7 +71,7 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
     portal_uri = load_image_as_data_uri(cosmetics.get("portal_img", ""))
 
     card_w = 160
-    card_h = 340
+    card_h = 350
 
     def cosmetic_slot(y, label, name, img_uri):
         """cosmetic slot"""
