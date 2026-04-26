@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        width="440" height="390" viewBox="0 0 440 390" fill="none">
+        width="440" height="409" viewBox="0 0 440 409" fill="none">
 
     <style>
 @font-face {
@@ -40,12 +40,11 @@
     </filter>
   </defs>
 
-  <rect width="440" height="390" rx="16" fill="url(#bg-grad)"/>
-  <rect width="440" height="390" rx="16" fill="url(#glow)"/>
-  <rect width="440" height="390" rx="16" fill="none" stroke="url(#border-grad)" stroke-width="1.5"/>
+  <rect width="440" height="409" rx="16" fill="url(#bg-grad)"/>
+  <rect width="440" height="409" rx="16" fill="url(#glow)"/>
+  <rect width="440" height="409" rx="16" fill="none" stroke="url(#border-grad)" stroke-width="1.5"/>
 
   <rect x="40" y="0" width="360" height="2.5" rx="1.25" fill="url(#top-bar)" opacity="0.8"/>
-
 
   <circle cx="52" cy="54" r="31" fill="none" stroke="#d4a437" stroke-width="2" opacity="0.25" filter="url(#soft-glow)"/>
   <circle cx="52" cy="54" r="29.5" fill="none" stroke="#d4a437" stroke-width="1.5" opacity="0.5"/>
@@ -99,23 +98,29 @@
   <text x="20" y="225" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ PLACEMENTS</text>
   <clipPath id="bar-clip"><rect x="20" y="232" width="400" height="20" rx="8"/></clipPath><g clip-path="url(#bar-clip)"><rect x="20.0" y="232" width="40.0" height="20" fill="#5bcefa" opacity="0.75"/><text x="40.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">1st</text><rect x="60.0" y="232" width="20.0" height="20" fill="#7ed4f0" opacity="0.75"/><rect x="80.0" y="232" width="40.0" height="20" fill="#98dce8" opacity="0.75"/><text x="100.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">3rd</text><rect x="120.0" y="232" width="100.0" height="20" fill="#b0e0e0" opacity="0.75"/><text x="170.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">4th</text><rect x="220.0" y="232" width="120.0" height="20" fill="#d4b8d4" opacity="0.75"/><text x="280.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">5th</text><rect x="340.0" y="232" width="60.0" height="20" fill="#e8a8b8" opacity="0.75"/><text x="370.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">6th</text><rect x="400.0" y="232" width="20.0" height="20" fill="#f0909a" opacity="0.75"/></g>
 
-  <text x="20" y="328" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif" xml:space="preserve">FAVORITE COMP:</text>
-  <text x="220" y="328" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif" xml:space="preserve">HATED COMP:</text>
-  <rect x="20" y="336" width="111" height="20" rx="11" fill="#96D294" stroke="#2a5080" stroke-width="0.5"/><text x="76" y="350" fill="#FFFFFF" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle">Void Fast 10 Kai'Sa</text>
-  <rect x="220" y="336" width="76" height="20" rx="11" fill="#FF6961" stroke="#2a5080" stroke-width="0.5"/><text x="258" y="350" fill="#FFFFFF" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle">Warwick Zaun</text>
+  
+    <text x="20" y="270" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif">FAVORITE COMP:</text>
+    <text x="220" y="270" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif">HATED COMP:</text>
+    <rect x="20" y="275" width="96" height="20" rx="11" fill="#96D294" stroke="#2a5080" stroke-width="0.5"/>
+    <text x="68" y="289" fill="#FFFFFF" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle">Vanguard Leblanc</text>
+    <rect x="220" y="275" width="111" height="20" rx="11" fill="#FF6961" stroke="#2a5080" stroke-width="0.5"/>
+    <text x="276" y="289" fill="#FFFFFF" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle">Twisted Fate Reroll</text>
+    
+  <text x="20" y="310" fill="#7a9cc6" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ PAST SETS</text>
+            <rect x="20" y="318" width="195" height="22" rx="11" fill="#6a7eff" opacity="0.25" stroke="#6a7eff" stroke-width="0.8" stroke-opacity="0.5"/>
+            <text x="118" y="333" fill="#6a7eff" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle">Set 16: Diamond IV</text>
+            
+            <rect x="225" y="318" width="195" height="22" rx="11" fill="#6a7eff" opacity="0.25" stroke="#6a7eff" stroke-width="0.8" stroke-opacity="0.5"/>
+            <text x="322" y="333" fill="#6a7eff" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle">Set 15: Diamond IV</text>
+            
+            <rect x="20" y="346" width="195" height="22" rx="11" fill="#6a7eff" opacity="0.25" stroke="#6a7eff" stroke-width="0.8" stroke-opacity="0.5"/>
+            <text x="118" y="361" fill="#6a7eff" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle">Set 14: Diamond IV</text>
+            
+            <rect x="225" y="346" width="195" height="22" rx="11" fill="#2d9e5c" opacity="0.25" stroke="#2d9e5c" stroke-width="0.8" stroke-opacity="0.5"/>
+            <text x="322" y="361" fill="#2d9e5c" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle">Set 14: Emerald IV</text>
+            
 
-  <text x="420" y="374" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="end">✦ Updated Apr 25, 2026 23:49 UTC</text>
-  <text x="20" y="374" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif">match history card designed by cindy!!</text>
-
-  <text x="20" y="275" fill="#7a9cc6" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ PAST SETS</text>
-            <rect x="20" y="283" width="128" height="22" rx="11" fill="#1e3a5f" stroke="#2a5080" stroke-width="0.5"/>
-            <text x="84" y="297" fill="#8bbce0" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle">Set 16: Diamond IV</text>
-            
-            <rect x="156" y="283" width="128" height="22" rx="11" fill="#1e3a5f" stroke="#2a5080" stroke-width="0.5"/>
-            <text x="220" y="297" fill="#8bbce0" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle">Set 15: Diamond IV</text>
-            
-            <rect x="292" y="283" width="128" height="22" rx="11" fill="#1e3a5f" stroke="#2a5080" stroke-width="0.5"/>
-            <text x="356" y="297" fill="#8bbce0" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle">Set 14: Diamond IV</text>
-            
+  <text x="420" y="393" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="end">✦ Updated Apr 26, 2026 00:07 UTC</text>
+  <text x="20" y="393" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif">match history card designed by cindy!!</text>
 
 </svg>
