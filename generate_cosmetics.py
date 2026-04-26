@@ -61,7 +61,7 @@ def get_tactician_image_uri(item_id):
     return ""
 
 
-def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics, card_h=399):
+def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics):
     """generates cosmetic svg"""
     species = companion.get("species", "Unknown")
     tactician_name = cosmetics.get("tactician_name", species.replace("PetChibi", "Chibi "))
@@ -77,9 +77,9 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics, card_h=399):
         """cosmetic slot"""
         if img_uri:
             img_el = f'''
-            <clipPath id="cos-clip-{label.lower()}"><rect x="30" y="{y}" width="100" height="60" rx="8"/></clipPath>
+            <clipPath id="clip-{label.lower()}"><rect x="30" y="{y}" width="100" height="60" rx="8"/></clipPath>
             <rect x="30" y="{y}" width="100" height="60" rx="8" fill="#0d2137"/>
-            <image href="{img_uri}" x="30" y="{y}" width="100" height="60" clip-path="url(#cos-clip-{label.lower()})" preserveAspectRatio="xMidYMid slice" opacity="0.8"/>
+            <image href="{img_uri}" x="30" y="{y}" width="100" height="60" clip-path="url(#clip-{label.lower()})" preserveAspectRatio="xMidYMid slice" opacity="0.8"/>
             '''
         else:
             img_el = f'''
@@ -131,8 +131,8 @@ def generate_cosmetics_svg(companion, tactician_img_uri, cosmetics, card_h=399):
   <text x="80" y="104" fill="#d4e6f7" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle">{escape_xml(tactician_name)}</text>
 
   {cosmetic_slot(125, "Arena", cosmetics.get("arena", ""), arena_uri)}
-  {cosmetic_slot(int(125 + (card_h - 125) / 3), "Boom", cosmetics.get("boom", ""), boom_uri)}
-  {cosmetic_slot(int(125 + 2 * (card_h - 125) / 3), "Portal", cosmetics.get("portal", ""), portal_uri)}
+  {cosmetic_slot(217, "Boom", cosmetics.get("boom", ""), boom_uri)}
+  {cosmetic_slot(310, "Portal", cosmetics.get("portal", ""), portal_uri)}
 
 
 </svg>'''
