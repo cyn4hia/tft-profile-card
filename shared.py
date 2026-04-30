@@ -1,3 +1,6 @@
+"""
+tft stats card
+"""
 import os
 import sys
 import json

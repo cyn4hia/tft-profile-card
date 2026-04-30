@@ -55,7 +55,7 @@
 
   <rect x="94" y="52" width="118" height="24" rx="12" fill="#d4a437" opacity="0.12" stroke="#d4a437" stroke-width="0.5" stroke-opacity="0.3"/>
   <text x="106" y="69" fill="#d4a437" font-size="12" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700">✦ Gold III</text>
-  <text x="169" y="69" fill="#5a8ab5" font-size="11" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600">40 LP</text>
+  <text x="169" y="69" fill="#5a8ab5" font-size="11" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600">77 LP</text>
 
   <line x1="28" y1="96" x2="412" y2="96" stroke="#1a3a5a" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
   <circle cx="220.0" cy="96" r="2" fill="#2a6aaa" opacity="0.6"/>
@@ -64,9 +64,9 @@
 
   
         <circle cx="60" cy="155" r="38" fill="#0d2137" stroke="#98d4ee" stroke-width="1.5" opacity="0.6"/>
-        <text x="60" y="150" fill="#98d4ee" font-size="18" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="800" text-anchor="middle">50%</text>
+        <text x="60" y="150" fill="#98d4ee" font-size="18" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="800" text-anchor="middle">55%</text>
         <text x="60" y="165" fill="#5a8ab5" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="600" text-anchor="middle" letter-spacing="0.5">WIN RATE</text>
-        <text x="60" y="177" fill="#3d6d94" font-size="7.5" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="middle">10W 10L</text>
+        <text x="60" y="177" fill="#3d6d94" font-size="7.5" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="middle">11W 9L</text>
         
         <circle cx="155" cy="155" r="38" fill="#0d2137" stroke="#b0c4de" stroke-width="1.5" opacity="0.6"/>
         <text x="155" y="150" fill="#b0c4de" font-size="18" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="800" text-anchor="middle">4.5</text>
@@ -76,27 +76,27 @@
 
   <text x="228" y="120" fill="#5a8ab5" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ RECENT GAMES</text>
 
-  <polyline points="248.0,164.9 259.4,170.6 270.9,153.4 282.3,164.9 293.7,159.1 305.1,164.9 316.6,153.4 328.0,176.3 339.4,170.6 350.9,153.4 362.3,170.6 373.7,176.3 385.1,153.4 396.6,153.4 408.0,153.4" fill="none" stroke="#b8d4f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="248.0" cy="164.9" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="259.4" cy="170.6" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
+  <polyline points="248.0,159.1 259.4,164.9 270.9,153.4 282.3,176.3 293.7,170.6 305.1,153.4 316.6,170.6 328.0,176.3 339.4,153.4 350.9,153.4 362.3,153.4 373.7,159.1 385.1,182.0 396.6,159.1 408.0,147.7" fill="none" stroke="#b8d4f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/><circle cx="248.0" cy="159.1" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="259.4" cy="164.9" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
 <circle cx="270.9" cy="153.4" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="282.3" cy="164.9" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="293.7" cy="159.1" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="305.1" cy="164.9" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="316.6" cy="153.4" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="282.3" cy="176.3" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="293.7" cy="170.6" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="305.1" cy="153.4" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="316.6" cy="170.6" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
 <circle cx="328.0" cy="176.3" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="339.4" cy="170.6" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="339.4" cy="153.4" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
 <circle cx="350.9" cy="153.4" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="362.3" cy="170.6" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="373.7" cy="176.3" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="385.1" cy="153.4" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="396.6" cy="153.4" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
-<circle cx="408.0" cy="153.4" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="362.3" cy="153.4" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="373.7" cy="159.1" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="385.1" cy="182.0" r="3" fill="#ffb3ba" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="396.6" cy="159.1" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
+<circle cx="408.0" cy="147.7" r="3" fill="#7ec8e3" stroke="white" stroke-width="1" opacity="0.95"/>
 
   <text x="228" y="193" fill="#3d6d94" font-size="7.5" font-family="'Fredoka', 'Segoe UI', sans-serif">8th</text>
   <text x="228" y="140" fill="#3d6d94" font-size="7.5" font-family="'Fredoka', 'Segoe UI', sans-serif">1st</text>
 
   <text x="20" y="225" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" letter-spacing="1">✧ PLACEMENTS</text>
-  <clipPath id="bar-clip"><rect x="20" y="232" width="400" height="20" rx="8"/></clipPath><g clip-path="url(#bar-clip)"><rect x="20.0" y="232" width="140.0" height="20" fill="#98dce8" opacity="0.75"/><text x="90.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">3rd</text><rect x="160.0" y="232" width="60.0" height="20" fill="#b0e0e0" opacity="0.75"/><text x="190.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">4th</text><rect x="220.0" y="232" width="80.0" height="20" fill="#d4b8d4" opacity="0.75"/><text x="260.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">5th</text><rect x="300.0" y="232" width="80.0" height="20" fill="#e8a8b8" opacity="0.75"/><text x="340.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">6th</text><rect x="380.0" y="232" width="40.0" height="20" fill="#f0909a" opacity="0.75"/><text x="400.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">7th</text></g>
+  <clipPath id="bar-clip"><rect x="20" y="232" width="400" height="20" rx="8"/></clipPath><g clip-path="url(#bar-clip)"><rect x="20.0" y="232" width="20.0" height="20" fill="#7ed4f0" opacity="0.75"/><rect x="40.0" y="232" width="120.0" height="20" fill="#98dce8" opacity="0.75"/><text x="100.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">3rd</text><rect x="160.0" y="232" width="80.0" height="20" fill="#b0e0e0" opacity="0.75"/><text x="200.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">4th</text><rect x="240.0" y="232" width="60.0" height="20" fill="#d4b8d4" opacity="0.75"/><text x="270.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">5th</text><rect x="300.0" y="232" width="60.0" height="20" fill="#e8a8b8" opacity="0.75"/><text x="330.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">6th</text><rect x="360.0" y="232" width="40.0" height="20" fill="#f0909a" opacity="0.75"/><text x="380.0" y="245.0" fill="#0a1628" font-size="8.5" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle" opacity="0.8">7th</text><rect x="400.0" y="232" width="20.0" height="20" fill="#f07080" opacity="0.75"/></g>
 
   
     <text x="20" y="270" fill="#5a8ab5" font-size="10" font-family="'Fredoka', 'Segoe UI', sans-serif">FAVORITE COMP:</text>
@@ -120,7 +120,7 @@
             <text x="322" y="361" fill="#2d9e5c" font-size="9" font-family="'Fredoka', 'Segoe UI', sans-serif" font-weight="700" text-anchor="middle">Set 14: Emerald IV</text>
             
 
-  <text x="420" y="393" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="end">✦ Updated Apr 29, 2026 01:16 UTC</text>
+  <text x="420" y="393" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif" text-anchor="end">✦ Updated Apr 30, 2026 23:00 UTC</text>
   <text x="20" y="393" fill="#1e3a5a" font-size="8" font-family="'Fredoka', 'Segoe UI', sans-serif">match history card designed by cindy!!</text>
 
 </svg>
