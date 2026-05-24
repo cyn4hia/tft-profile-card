@@ -136,7 +136,7 @@ def generate_svg(riot_id, tier, rank, lp, wins, losses, match_stats, icon_data_u
     # --- PAST SETS (y=310) ---
     rank_pill_colors = {
         "iron": "#6b6b6b", "bronze": "#a0522d", "silver": "#a8a8a8",
-        "gold": "#d4a437", "platinum": "#4eb5a1", "emerald": "#2d9e5c",
+        "gold": "#d4a437", "platinum": "#57c183", "emerald": "#2d9e5c",
         "diamond": "#6a7eff", "master": "#9d4dbb", "grandmaster": "#e34444",
         "challenger": "#f5c542",
     }
